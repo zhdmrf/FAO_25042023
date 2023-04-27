@@ -115,3 +115,7 @@ ghi_merged["ghi_2021"].plot()
 
 # interpolation avec méthode quadratic pour remplir les nan de manière plus réaliste
 ghi_merged.interpolate(method='quadratic').plot()
+
+# convertir colonne "ghi_2022 > object" en float
+ghi_merged["ghi_2022"] = pd.to_numeric(ghi_merged['ghi_2022'], errors='coerce')
+print(ghi_merged.info())

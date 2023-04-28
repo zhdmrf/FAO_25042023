@@ -93,6 +93,8 @@ ghi_merged.columns = ["Country", "ghi_2000", "ghi_2006",
 ghi_merged.head()
 ghi_merged.shape  # 134 lignes et 7 colonnes
 
+ghi_merged.sample(80)
+
 # GESTION DES VALEURS MANQUANTES
 # dropna() supprime
 # fillna() : remplir avec la valeur moyenne, la valeur la plus commune
@@ -105,13 +107,13 @@ ghi_merged.isna().sum()  # True = proportions de valeurs manquantes
 len(ghi_merged) - (ghi_merged['ghi_2000'] == ghi_merged['ghi_2000']).sum()
 # 22 valeurs manquantes dans colonne ghi_2000
 
-msno.matrix(ghi_merged)
+#msno.matrix(ghi_merged)
 
 # distribution du GHI par année et par pays
-ghi_merged.value_counts()
+ghi_merged["Country"].value_counts()
 
 # visualisation colonne le plus marqué par valeurs manquantes
-ghi_merged["ghi_2021"].plot()
+#ghi_merged["ghi_2021"].plot()
 
 # interpolation avec méthode quadratic pour remplir les nan de manière plus réaliste
 ghi_merged.interpolate(method='quadratic').plot()
@@ -119,3 +121,31 @@ ghi_merged.interpolate(method='quadratic').plot()
 # convertir colonne "ghi_2022 > object" en float
 ghi_merged["ghi_2022"] = pd.to_numeric(ghi_merged['ghi_2022'], errors='coerce')
 print(ghi_merged.info())
+
+len(ghi_merged["Country"].unique()) # 134 pays différents
+
+ghi_merged = ghi_merged.set_index('Country')
+ghi_merged
+
+# calcul de la moyenne du GHI par pays de 2000 à 2022
+means = ghi_merged.mean(axis=1, skipna=True).sort_values(ascending=True)
+#print(f"Le top des 10 pays avec un GHI élevés sont : {means.tail(10)}")
+
+# fonction
+def categorize(valeurs):
+    # je categorise selon 
+
+
+# Quel pays a le plus fort GHI par année d'étude et quelle est son évolution en 22 ans ?
+print(ghi_merged.groupby(['Country']).agg( {'ghi_2000': ['max'], 'ghi_2006': ['min', 'max'], 'ghi_2012':['min', 'max'], 'ghi_2014':['min', 'max'], 'ghi_2021': ['min', 'max'], 'ghi_2022': ['min', 'max']} ))
+# sauvegarde du nouveau dataframe
+ghi_merged.to_csv('ghi_2000_2022_full.csv', index=False)
+
+
+
+# analyse de la distribution par année
+
+#cols=[ghi_2000, ghi_2006, ghi_2012, ghi_2014, ghi_2022]
+
+#for x in range(len(cols)):
+
